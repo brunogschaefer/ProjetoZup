@@ -37,4 +37,23 @@ public class PlayerServices {
 		number = numberRepository.save(number);
 		return new PlayerDTO(player);
 	}
+	
+	@Transactional 
+	public PlayerDTO update(PlayerDTO dto) {
+		Player player;
+		LotoNumber number;
+		boolean ifExists = playerRepository.existsPlayerByEmail(dto.getEmail());
+		if (ifExists == false) {
+			player = new Player (null, dto.getEmail());
+			number = new LotoNumber(null, GenerateRandomNumbers.genRandom());
+		}
+		else {
+			player = playerRepository.findByEmail(dto.getEmail());
+			number = new LotoNumber(null, GenerateRandomNumbers.genRandom());
+		}
+		number = numberRepository.save(number);
+		player.getNumbers().add(number);
+		player = playerRepository.save(player);
+		return new PlayerDTO(player);
+	}
 }

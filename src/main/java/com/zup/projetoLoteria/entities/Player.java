@@ -3,7 +3,10 @@ package com.zup.projetoLoteria.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table (name = "tb_player")
@@ -18,10 +22,14 @@ public class Player {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column (unique = true)
 	private Long id;
+	
+	@NotNull
 	private String email;
-	//(fetch = FetchType.LAZY)
-	@OneToMany 
+	
+	@OneToMany (fetch = FetchType.LAZY,
+				cascade = CascadeType.PERSIST) //object references an unsaved transient instance - save the transient instance before flushing
 	@JoinTable (name = "tb_player_number",
 				joinColumns = @JoinColumn(name = "player_id"),
 				inverseJoinColumns = @JoinColumn(name = "number_id"))
@@ -31,7 +39,6 @@ public class Player {
 	public Player(Long id, String email) {
 		this.id = id;
 		this.email = email;
-		//new LotoNumber(null, GenerateRandomNumbers.genRandom());
 	}
 	
 	public Long getId() {

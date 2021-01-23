@@ -13,5 +13,9 @@ public interface PlayerRepository extends JpaRepository<Player, Long>{
 
 	@Query ("SELECT DISTINCT obj FROM Player obj JOIN FETCH obj.numbers ORDER BY obj.id ASC")
 	List<Player> findPlayersWithNumbers();
-
+	
+	@Query ("SELECT DISTINCT obj FROM Player obj WHERE obj.email = ?1")
+	Player findByEmail(String email);
+	
+	boolean existsPlayerByEmail(String email);
 }
