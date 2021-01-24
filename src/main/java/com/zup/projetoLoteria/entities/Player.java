@@ -22,14 +22,14 @@ public class Player {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column (unique = true)
 	private Long id;
 	
 	@NotNull
+	@Column (unique = true)
 	private String email;
 	
 	@OneToMany (fetch = FetchType.LAZY,
-				cascade = CascadeType.PERSIST) //object references an unsaved transient instance - save the transient instance before flushing
+				cascade = CascadeType.PERSIST) 
 	@JoinTable (name = "tb_player_number",
 				joinColumns = @JoinColumn(name = "player_id"),
 				inverseJoinColumns = @JoinColumn(name = "number_id"))

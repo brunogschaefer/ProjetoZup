@@ -1,5 +1,6 @@
 package com.zup.projetoLoteria.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,7 @@ public class LotoNumber {
 	private Long id;
 	
 	@NotNull
+	@Column (unique = true)
 	private String number;
 	
 	public LotoNumber () {}

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.zup.projetoLoteria.dto.PlayerDTO;
+import com.zup.projetoLoteria.exceptions.AlreadyExistsException;
 import com.zup.projetoLoteria.services.PlayerServices;
 
 @RestController
@@ -30,10 +31,15 @@ public class PlayerController {
 	}
 	
 	@PostMapping 
-	public ResponseEntity<PlayerDTO> insert (@RequestBody PlayerDTO dto){
+	public ResponseEntity<PlayerDTO> insert (@RequestBody PlayerDTO dto) throws AlreadyExistsException{
 		dto = pService.insert(dto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).body(dto);
+		if (dto.getEmail() != null) {
+			throw new AlreadyExistsException();
+		}
+		else {
+			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(dto.getId()).toUri();
+			return ResponseEntity.created(uri).body(dto);
+		}
 	}
 	
 	@PutMapping
