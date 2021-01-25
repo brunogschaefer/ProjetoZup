@@ -1,8 +1,5 @@
 package com.zup.projetoLoteria.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +20,9 @@ public class PlayerServices {
 	private LotoNumberRepository numberRepository;
 	
 	@Transactional (readOnly = true)
-	public List<PlayerDTO> findAll(){
-		List<Player> list = playerRepository.findPlayersWithNumbers();
-		return list.stream().map(x -> new PlayerDTO(x)).collect(Collectors.toList());
+	public PlayerDTO findByEmail(PlayerDTO dto) {
+		Player player = playerRepository.findByEmail(dto.getEmail());
+		return new PlayerDTO(player);
 	}
 	
 	@Transactional 
@@ -57,3 +54,5 @@ public class PlayerServices {
 		return new PlayerDTO(player);
 	}
 }
+
+

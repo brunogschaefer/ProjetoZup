@@ -1,7 +1,6 @@
 package com.zup.projetoLoteria.controller;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.zup.projetoLoteria.dto.PlayerDTO;
-import com.zup.projetoLoteria.exceptions.AlreadyExistsException;
 import com.zup.projetoLoteria.services.PlayerServices;
 
 @RestController
@@ -25,27 +23,22 @@ public class PlayerController {
 	private PlayerServices pService;
 	
 	@GetMapping
-	public ResponseEntity<List<PlayerDTO>> findAll(){
-		List<PlayerDTO> list = pService.findAll();
-		return ResponseEntity.ok().body(list);
+	public ResponseEntity<PlayerDTO> findByEmail(@RequestBody PlayerDTO dto){
+		PlayerDTO player = pService.findByEmail(dto);
+		return ResponseEntity.ok().body(player);
 	}
 	
 	@PostMapping 
-	public ResponseEntity<PlayerDTO> insert (@RequestBody PlayerDTO dto) throws AlreadyExistsException{
+	public ResponseEntity<PlayerDTO> insert (@RequestBody PlayerDTO dto){
 		dto = pService.insert(dto);
-		if (dto.getEmail() != null) {
-			throw new AlreadyExistsException();
-		}
-		else {
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(dto.getId()).toUri();
-			return ResponseEntity.created(uri).body(dto);
-		}
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(dto.getId()).toUri();
+		return ResponseEntity.created(uri).body(dto);
 	}
 	
 	@PutMapping
 	public ResponseEntity<PlayerDTO> update (@RequestBody PlayerDTO dto){
 		dto = pService.update(dto);
-		ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(dto.getId());
+		ServletUriComponentsBuilder.fromCurrentRequest().path("/{Id}").buildAndExpand(dto.getId()); 
 		return ResponseEntity.ok().body(dto);
 	}
 }
